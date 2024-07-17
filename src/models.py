@@ -7,6 +7,13 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
+    password = Column(String(50), nullable=False)
+
 class People(Base):
     __tablename__ = 'people'
     id = Column(Integer, primary_key=True)
@@ -43,7 +50,8 @@ class Vehicles(Base):
 class Favorites(Base):
     __tablename__ = 'favorites'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
     people_id = Column(Integer, ForeignKey('people.id'))
     people = relationship(People)
     planets_id = Column(Integer, ForeignKey('planets.id'))
@@ -51,6 +59,8 @@ class Favorites(Base):
     vehicles_id = Column(Integer, ForeignKey('vehicles.id'))
     vehicles = relationship(Vehicles)
 
+    def to_dict(self):
+        return {}
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
